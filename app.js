@@ -29,7 +29,8 @@ var budgetCotroller = (function() {
             exp: 0,
             inc: 0
         },
-        budget: 0
+        budget: 0,
+        percentage: -1
     };
     
     return {
@@ -62,6 +63,21 @@ var budgetCotroller = (function() {
             calculateTotal('inc');
             
             data.budget = data.totals.inc - data.totals.exp;
+            
+            if(data.totals.inc > 0) {
+                data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
+            }
+                data.percentage = -1;
+            }
+        },
+        
+        getBudget: function() {
+            return {
+                budget: data.budget,
+                totalInc: data.totals.inc,
+                totalExp: data.totals.exp,
+                percentage: data.percentage
+            }
         },
         
         testing: function() {
@@ -122,6 +138,10 @@ var UIController = (function() {
             fieldsArr[ 0].focus();
         },
         
+        displayBudget: function() {
+            
+        },
+        
         //AN INTERFACE TO ACCESS DOM STRINGS
         getDOMStrings: function() {
             return DOMStrings;
@@ -146,7 +166,13 @@ var controller = (function(budgetCtrl, UICtrl) {
     }
     
     var updateBudget = function() {
+        //CALCULATES THE BUDGET
+        budgetCtrl.calculateBudget();
         
+        //GET THE BUDGET
+        var budget = budgetCtrl.getBudget();
+        
+        console.log(budget);
     }
     
     var ctrlAddItem = function() {
